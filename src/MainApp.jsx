@@ -1,72 +1,114 @@
-/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  View,
+  FlatList,
   Image,
+  StyleSheet,
   Text,
-  TouchableHighlight,
+  View,
 } from 'react-native';
+import data from './sales.json';
 
-import heartIcon from './images/plain-heart.png';
+import basketIcon from './images/basket.png';
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-    alignItems: 'center',
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  btn: {
-    borderRadius: 5,
+  title: {
+    backgroundColor: '#0f1b29',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
     padding: 10,
+    paddingTop: 40,
+    textAlign: 'center',
+  },
+  row: {
+    borderColor: '#f1f1f1',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginRight: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: '#feb401',
+    borderColor: '#feaf12',
+    borderRadius: 25,
+    borderWidth: 1,
+    justifyContent: 'center',
+    height: 50,
+    width: 50,
   },
   icon: {
-    width: 180,
-    height: 180,
-    tintColor: '#f1f1f1',
+    tintColor: '#fff',
+    height: 22,
+    width: 22,
   },
-  liked: {
-    tintColor: '#e74c3c',
+  info: {
+    flex: 1,
+    paddingLeft: 25,
+    paddingRight: 25,
   },
-  text: {
-    marginTop: 20,
+  items: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  address: {
+    color: '#ccc',
+    fontSize: 14,
+  },
+  total: {
+    width: 80,
+  },
+  date: {
+    fontSize: 12,
+    marginBottom: 5,
+  },
+  price: {
+    color: '#1cad61',
+    fontSize: 25,
+    fontWeight: 'bold',
   },
 });
 
-class MainApp extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      liked: false,
-    };
-  }
-
-  _onPressBtn = () => {
-    this.setState({
-      liked: !this.state.liked,
-    });
-  };
-
-  render() {
-    const likedStyles = this.state.liked
-      ? styles.liked
-      : null;
-
-    return (
-      <View style={styles.container}>
-        <TouchableHighlight
-          onPress={() => this._onPressBtn()}
-          style={styles.btn}
-          underlayColor="#fefefe"
-        >
-          <Image
-            source={heartIcon}
-            style={[styles.icon, likedStyles]}
-          />
-        </TouchableHighlight>
-        <Text style={styles.text}>
-          Do you like this app?
+function RenderRow({ record }) {
+  return (
+    <View style={styles.row}>
+      <View style={styles.iconContainer}>
+        <Image source={basketIcon} style={styles.icon} />
+      </View>
+      <View style={styles.info}>
+        <Text style={styles.items}>
+          {record.items} Items
         </Text>
+        <Text style={styles.address}>{record.address}</Text>
+      </View>
+      <View style={styles.total}>
+        <Text style={styles.date}>{record.date}</Text>
+        <Text style={styles.price}>${record.total}</Text>
+      </View>
+    </View>
+  );
+}
+
+class MainApp extends Component {
+  render() {
+    return (
+      <View style={styles.mainContainer}>
+        <Text style={styles.title}>Sales</Text>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <RenderRow record={item} />
+          )}
+          keyExtractor={(item, i) => i.toString()}
+        />
       </View>
     );
   }
