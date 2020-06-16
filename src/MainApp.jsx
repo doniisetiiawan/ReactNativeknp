@@ -1,20 +1,40 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from './Home';
-import Detail from './Detail';
+import { Alert, StyleSheet, View } from 'react-native';
+import Button from './Button/Button';
 
-const Stack = createStackNavigator();
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btn: {
+    margin: 10,
+  },
+});
 
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator headerMode="none">
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Detail" component={Detail} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+function onPressBtn() {
+  Alert.alert('Alert', 'You clicked this button!');
 }
 
-export default App;
+const MainApp = () => (
+  <View style={styles.container}>
+    <Button style={styles.btn}> My first button </Button>
+    <Button success style={styles.btn}>
+      Success button
+    </Button>
+    <Button info style={styles.btn}>
+      Info button
+    </Button>
+    <Button
+      danger
+      rounded
+      style={styles.btn}
+      onPress={onPressBtn}
+    >
+      Rounded button
+    </Button>
+  </View>
+);
+
+export default MainApp;
