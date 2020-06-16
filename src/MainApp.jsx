@@ -1,137 +1,20 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-} from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './Home';
+import Detail from './Detail';
 
-import profileImage from './images/user-profile.jpg';
-import friendsIcon from './images/profile.png';
-import favIcon from './images/plain-heart.png';
-import msgIcon from './images/chat.png';
+const Stack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: null,
-    width: null,
-  },
-  info: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    top: null,
-  },
-  personal: {
-    padding: 30,
-  },
-  name: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  occupation: {
-    color: '#d6ec1b',
-    marginTop: 5,
-  },
-  stats: {
-    flexDirection: 'row',
-  },
-  stat: {
-    alignItems: 'center',
-    backgroundColor: '#7675b7',
-    borderColor: '#6e6db1',
-    borderLeftWidth: 1,
-    flex: 1,
-    padding: 10,
-  },
-  selected: {
-    tintColor: '#d6ec1b',
-  },
-  icon: {
-    tintColor: '#504f9f',
-    height: 30,
-    width: 30,
-  },
-  counter: {
-    color: '#fff',
-    fontSize: 15,
-    marginTop: 5,
-  },
-});
-
-class MainApp extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: 'Crysfel',
-      lastName: 'Villa Roman',
-      occupation: 'Software Engineer',
-      friends: '1,200',
-      favorites: '2,491',
-      comments: '4,832',
-    };
-  }
-
-  renderStat = (options) => (
-    <View style={styles.stat}>
-      <Image
-        source={options.icon}
-        style={[
-          styles.icon,
-          options.selected ? styles.selected : null,
-        ]}
-      />
-      <Text style={styles.counter}>{options.value}</Text>
-    </View>
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator headerMode="none">
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Detail" component={Detail} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-
-  render() {
-    const {
-      name,
-      lastName,
-      occupation,
-      friends,
-      favorites,
-      comments,
-    } = this.state;
-
-    return (
-      <>
-        <Image
-          source={profileImage}
-          style={styles.container}
-        />
-
-        <View style={styles.info}>
-          <View style={styles.personal}>
-            <Text style={styles.name}>
-              {name} {lastName}
-            </Text>
-            <Text style={styles.occupation}>
-              {occupation.toUpperCase()}
-            </Text>
-          </View>
-          <View style={styles.stats}>
-            {this.renderStat({
-              icon: friendsIcon,
-              value: friends,
-              selected: true,
-            })}
-            {this.renderStat({
-              icon: favIcon,
-              value: favorites,
-            })}
-            {this.renderStat({
-              icon: msgIcon,
-              value: comments,
-            })}
-          </View>
-        </View>
-      </>
-    );
-  }
 }
 
-export default MainApp;
+export default App;
