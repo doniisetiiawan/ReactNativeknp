@@ -1,45 +1,71 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
+
+import playIcon from './images/play.png';
+import volumeIcon from './images/sound.png';
+import hdIcon from './images/hd-sign.png';
+import fullScreenIcon from './images/full-screen.png';
+
+const remoteImage = {
+  uri:
+    'https://s3.amazonaws.com/crysfel/public/book/new-york.jpg',
+};
 
 const styles = StyleSheet.create({
+  fullscreen: {
+    flex: 1,
+  },
   container: {
-    margin: 10,
-    marginTop: 100,
-    backgroundColor: '#e67e22',
-    borderRadius: 5,
-  },
-  innerContainer: {
-    backgroundColor: '#d35400',
-    height: 50,
-    width: 150,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '200',
-    color: '#fff',
     position: 'absolute',
-    backgroundColor: 'transparent',
-    top: 12,
+    backgroundColor: '#202020',
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 50,
+    padding: 5,
+    paddingTop: 16,
+    bottom: 30,
+    right: 10,
     left: 10,
+    borderWidth: 1,
+    borderColor: '#303030',
   },
-  subtitle: {
-    fontWeight: 'bold',
+  icon: {
+    tintColor: '#fff',
+    height: 16,
+    width: 16,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  progress: {
+    backgroundColor: '#000',
+    borderRadius: 7,
+    flex: 1,
+    height: 14,
+    margin: 10,
+    marginTop: 2,
+  },
+  progressBar: {
+    backgroundColor: '#bf161c',
+    borderRadius: 5,
+    height: 10,
+    margin: 2,
+    width: 80,
   },
 });
 
-const MainApp = () => {
-  const name = '01 - Hey, this is my life';
-
-  return (
+const MainApp = () => (
+  <>
+    <Image source={remoteImage} style={styles.fullscreen} />
     <View style={styles.container}>
-      <View style={styles.innerContainer} />
-      <Text style={styles.title}>
-        <Text style={styles.subtitle}>Playing:</Text> {name}
-      </Text>
+      <Image source={playIcon} style={styles.icon} />
+      <Image source={volumeIcon} style={styles.icon} />
+      <View style={styles.progress}>
+        <View style={styles.progressBar} />
+      </View>
+      <Image source={hdIcon} style={styles.icon} />
+      <Image source={fullScreenIcon} style={styles.icon} />
     </View>
-  );
-};
+  </>
+);
 
 export default MainApp;
