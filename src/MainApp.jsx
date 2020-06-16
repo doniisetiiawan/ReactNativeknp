@@ -1,117 +1,133 @@
 /* eslint-disable react/prop-types */
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  FlatList,
   Image,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import data from './sales.json';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import basketIcon from './images/basket.png';
+import homeIcon from './images/home.png';
+import favIcon from './images/star.png';
+import blogIcon from './images/notebook.png';
+import profileIcon from './images/user.png';
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
-    backgroundColor: '#0f1b29',
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: 10,
-    paddingTop: 40,
-    textAlign: 'center',
-  },
-  row: {
-    borderColor: '#f1f1f1',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    marginLeft: 10,
-    marginRight: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
-  },
-  iconContainer: {
-    alignItems: 'center',
-    backgroundColor: '#feb401',
-    borderColor: '#feaf12',
-    borderRadius: 25,
-    borderWidth: 1,
-    justifyContent: 'center',
-    height: 50,
-    width: 50,
+    fontSize: 20,
+    marginTop: 20,
   },
   icon: {
-    tintColor: '#fff',
-    height: 22,
-    width: 22,
-  },
-  info: {
-    flex: 1,
-    paddingLeft: 25,
-    paddingRight: 25,
-  },
-  items: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  address: {
-    color: '#ccc',
-    fontSize: 14,
-  },
-  total: {
-    width: 80,
-  },
-  date: {
-    fontSize: 12,
-    marginBottom: 5,
-  },
-  price: {
-    color: '#1cad61',
-    fontSize: 25,
-    fontWeight: 'bold',
+    width: 30,
+    height: 30,
+    tintColor: '#42b49a',
   },
 });
 
-function RenderRow({ record }) {
+function HomeScreen() {
   return (
-    <View style={styles.row}>
-      <View style={styles.iconContainer}>
-        <Image source={basketIcon} style={styles.icon} />
-      </View>
-      <View style={styles.info}>
-        <Text style={styles.items}>
-          {record.items} Items
-        </Text>
-        <Text style={styles.address}>{record.address}</Text>
-      </View>
-      <View style={styles.total}>
-        <Text style={styles.date}>{record.date}</Text>
-        <Text style={styles.price}>${record.total}</Text>
-      </View>
+    <View style={styles.container}>
+      <Image source={homeIcon} style={styles.icon} />
+      <Text style={styles.title}>Home</Text>
     </View>
   );
 }
 
-class MainApp extends Component {
-  render() {
-    return (
-      <View style={styles.mainContainer}>
-        <Text style={styles.title}>Sales</Text>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <RenderRow record={item} />
-          )}
-          keyExtractor={(item, i) => i.toString()}
+function FavoritesScreen() {
+  return (
+    <View style={styles.container}>
+      <Image source={favIcon} style={styles.icon} />
+      <Text style={styles.title}>Favorites</Text>
+    </View>
+  );
+}
+
+function BlogScreen() {
+  return (
+    <View style={styles.container}>
+      <Image source={blogIcon} style={styles.icon} />
+      <Text style={styles.title}>Blog</Text>
+    </View>
+  );
+}
+
+function ProfileScreen() {
+  return (
+    <View style={styles.container}>
+      <Image source={profileIcon} style={styles.icon} />
+      <Text style={styles.title}>Profile</Text>
+    </View>
+  );
+}
+
+function TabBarIcon(props) {
+  return <Image source={props.icon} style={styles.icon} />;
+}
+
+const Tab = createBottomTabNavigator();
+
+function MainApp() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon
+                focused={focused}
+                icon={homeIcon}
+              />
+            ),
+          }}
         />
-      </View>
-    );
-  }
+        <Tab.Screen
+          name="Favorites"
+          component={FavoritesScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon
+                focused={focused}
+                icon={favIcon}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Blog"
+          component={BlogScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon
+                focused={focused}
+                icon={blogIcon}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon
+                focused={focused}
+                icon={profileIcon}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
 }
 
 export default MainApp;
