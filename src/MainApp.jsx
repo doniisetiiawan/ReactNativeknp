@@ -1,40 +1,54 @@
 import React from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
-import Button from './Button/Button';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import Post from './Post/Post';
+import data from './data.json';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  btn: {
-    margin: 10,
+  list: {
+    backgroundColor: '#f0f3f4',
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  content: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+  },
+  toolbar: {
+    backgroundColor: '#34495e',
+    padding: 10,
+    paddingTop: 20,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 
-function onPressBtn() {
-  Alert.alert('Alert', 'You clicked this button!');
+function MainApp() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.toolbar}>
+        <Text style={styles.title}>Latest posts</Text>
+      </View>
+      <FlatList
+        data={data.posts}
+        renderItem={(post) => <Post {...post} />}
+        style={styles.list}
+        keyExtractor={(post, index) => index.toString()}
+      />
+    </View>
+  );
 }
-
-const MainApp = () => (
-  <View style={styles.container}>
-    <Button style={styles.btn}> My first button </Button>
-    <Button success style={styles.btn}>
-      Success button
-    </Button>
-    <Button info style={styles.btn}>
-      Info button
-    </Button>
-    <Button
-      danger
-      rounded
-      style={styles.btn}
-      onPress={onPressBtn}
-    >
-      Rounded button
-    </Button>
-  </View>
-);
 
 export default MainApp;
