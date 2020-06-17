@@ -1,54 +1,89 @@
-import React from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import Post from './Post/Post';
-import data from './data.json';
+import React, { Component } from 'react';
+import EvilIcon from 'react-native-vector-icons/EvilIcons';
+import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  list: {
-    backgroundColor: '#f0f3f4',
-    flex: 1,
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
   content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
   },
-  toolbar: {
-    backgroundColor: '#34495e',
-    padding: 10,
-    paddingTop: 20,
-  },
-  title: {
-    color: '#fff',
-    fontSize: 20,
-    textAlign: 'center',
+  icon: {
+    margin: 10,
   },
 });
 
-function MainApp() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.toolbar}>
-        <Text style={styles.title}>Latest posts</Text>
-      </View>
-      <FlatList
-        data={data.posts}
-        renderItem={(post) => <Post {...post} />}
-        style={styles.list}
-        keyExtractor={(post, index) => index.toString()}
+const MainApp = () => (
+  <View style={styles.content}>
+    <View style={styles.row}>
+      <EvilIcon
+        style={styles.icon}
+        name="user"
+        size={50}
+        color="#e67e22"
+      />
+      <EvilIcon
+        style={styles.icon}
+        name="search"
+        size={50}
+        color="#e67e22"
+      />
+      <EvilIcon
+        style={styles.icon}
+        name="trophy"
+        size={50}
+        color="#e67e22"
+      />
+      <EvilIcon
+        style={styles.icon}
+        name="location"
+        size={50}
+        color="#e67e22"
+      />
+      <EvilIcon
+        style={styles.icon}
+        name="gear"
+        size={50}
+        color="#e67e22"
       />
     </View>
-  );
-}
+    <View style={styles.row}>
+      <FAIcon
+        style={styles.icon}
+        name="briefcase"
+        size={40}
+        color="#c0392b"
+      />
+      <FAIcon
+        style={styles.icon}
+        name="calendar"
+        size={40}
+        color="#c0392b"
+      />
+      <FAIcon
+        style={styles.icon}
+        name="camera-retro"
+        size={40}
+        color="#c0392b"
+      />
+      <FAIcon
+        style={styles.icon}
+        name="globe"
+        size={40}
+        color="#c0392b"
+      />
+      <FAIcon
+        style={styles.icon}
+        name="print"
+        size={40}
+        color="#c0392b"
+      />
+    </View>
+  </View>
+);
 
 export default MainApp;
