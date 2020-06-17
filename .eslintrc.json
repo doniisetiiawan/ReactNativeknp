@@ -20,6 +20,7 @@
     "react/destructuring-assignment": "off",
     "no-param-reassign": "off",
     "react/jsx-props-no-spreading": "off",
+    "consistent-return": "off",
     "react/jsx-one-expression-per-line": "off"
   }
 }
