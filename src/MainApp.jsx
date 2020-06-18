@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import Panel from './Panel/Panel';
+import Button from './Button/Button';
 
 const styles = StyleSheet.create({
   main: {
     flex: 1,
   },
   toolbar: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#f39c12',
     color: '#fff',
     fontSize: 22,
     padding: 20,
@@ -17,68 +17,42 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#ecf0f1',
     flex: 1,
-  },
-  panel: {
-    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-const MainApp = () => (
-  <View style={styles.main}>
-    <Text style={styles.toolbar}>Animated containers</Text>
-    <View style={styles.content}>
-      <Panel
-        title="This is the first container"
-        style={styles.panel}
-      >
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat. Duis aute
-          irure dolor in reprehenderit in voluptate velit
-          esse cillum dolore eu fugiat nulla pariatur.
-          Excepteur sint occaecat cupidatat non proident,
-          sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
+class MainApp extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: false,
+    };
+  }
+
+  onPressBtn = (loading) => {
+    this.setState({ loading });
+  };
+
+  render() {
+    const { loading } = this.state;
+
+    return (
+      <View style={styles.main}>
+        <Text style={styles.toolbar}>
+          Animated containers
         </Text>
-      </Panel>
-      <Panel
-        title="Second panel in the view"
-        style={styles.panel}
-      >
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint
-          occaecat cupidatat non proident, sunt in culpa qui
-          officia deserunt mollit anim id est laborum.
-        </Text>
-      </Panel>
-      <Panel
-        expanded
-        title="One more to test"
-        style={styles.panel}
-      >
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat.
-        </Text>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat.
-        </Text>
-      </Panel>
-    </View>
-  </View>
-);
+        <View style={styles.content}>
+          <Button
+            label="Login"
+            loading={loading}
+            onPress={() => this.onPressBtn()}
+          />
+        </View>
+      </View>
+    );
+  }
+}
 
 export default MainApp;

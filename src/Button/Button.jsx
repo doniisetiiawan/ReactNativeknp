@@ -1,55 +1,75 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
-import Base, {
-  Danger,
-  Default,
-  Info,
-  Success,
-} from './styles';
+import {
+  ActivityIndicator,
+  LayoutAnimation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+const styles = StyleSheet.create({
+  main: {
+    backgroundColor: '#e67e22',
+    borderRadius: 20,
+    padding: 10,
+    paddingLeft: 50,
+    paddingRight: 50,
+  },
+  label: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+  loading: {
+    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+});
 
 class Button extends Component {
-  getTheme = () => {
-    const { danger, info, success } = this.props;
+  onPressButton = () => {
+    const { loading, onPress } = this.props;
 
-    if (info) {
-      return Info;
+    LayoutAnimation.easeInEaseOut();
+    onPress(!loading);
+  };
+
+  renderActivityIndicator = () => {
+    if (this.props.loading) {
+      return (
+        <ActivityIndicator size="small" color="#fff" />
+      );
     }
+  };
 
-    if (success) {
-      return Success;
+  renderLabel = () => {
+    const { label, loading } = this.props;
+    if (!loading) {
+      return <Text style={styles.label}>{label}</Text>;
     }
-
-    if (danger) {
-      return Danger;
-    }
-
-    return Default;
   };
 
   render() {
-    const theme = this.getTheme();
-    const {
-      children,
-      onPress,
-      style,
-      rounded,
-    } = this.props;
+    const { loading, style } = this.props;
 
     return (
       <TouchableOpacity
-        activeOpacity={0.8}
         style={[
-          Base.main,
-          theme.main,
-          rounded ? Base.rounded : null,
+          styles.main,
           style,
+          loading ? styles.loading : null,
         ]}
-        onPress={onPress}
+        activeOpacity={0.6}
+        onPress={() => this.onPressButton()}
       >
-        <Text style={[Base.label, theme.label]}>
-          {children}
-        </Text>
+        <View>
+          {this.renderLabel()}
+          {this.renderActivityIndicator()}
+        </View>
       </TouchableOpacity>
     );
   }
