@@ -1,63 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  Alert,
-  StyleSheet,
   ScrollView,
-  View,
+  StyleSheet,
   Text,
+  View,
 } from 'react-native';
-import HTMLView from 'react-native-htmlview';
-import data from './data.json';
+import UserForm from './UserForm/UserForm';
 
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    backgroundColor: '#ecf0f1',
+  },
+  toolbar: {
+    backgroundColor: '#1abc9c',
+    padding: 20,
+    color: '#fff',
+    fontSize: 20,
   },
   content: {
-    flex: 1,
     padding: 10,
-  },
-  title: {
-    backgroundColor: '#c0392b',
-    color: '#fff',
-    padding: 20,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  p: {
-    color: '#333',
-    fontSize: 16,
-  },
-  h3: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  a: {
-    color: '#c0392b',
-    fontWeight: 'normal',
   },
 });
 
-class MainApp extends Component {
-  onLinkPress = (url) => {
-    Alert.alert('Link press', `URL: ${url}`);
-  };
-
-  render() {
-    return (
-      <View style={styles.main}>
-        <Text style={styles.title}>{data.title}</Text>
-        <ScrollView style={styles.content}>
-          <HTMLView
-            value={data.content}
-            stylesheet={styles}
-            onLinkPress={this.onLinkPress}
-          />
-        </ScrollView>
-      </View>
-    );
-  }
-}
+const MainApp = () => (
+  <View style={styles.main}>
+    <Text style={styles.toolbar}>Fitness App</Text>
+    <ScrollView style={styles.content}>
+      <UserForm />
+    </ScrollView>
+  </View>
+);
 
 export default MainApp;
