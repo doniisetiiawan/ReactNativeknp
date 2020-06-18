@@ -1,32 +1,101 @@
+/* eslint-disable react/prop-types,react/no-array-index-key */
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Dimensions from './utils/Dimensions';
-import UserList from './UserList/userList';
-import UserDetail from './UserDetail/userList';
-import data from './data.json';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Browser from './BrowserView/BrowserView';
+
+const Stack = createStackNavigator();
 
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btn: {
+    flex: 1,
+    margin: 10,
+    backgroundColor: '#c0392b',
+    borderRadius: 3,
+    padding: 10,
+    paddingRight: 30,
+    paddingLeft: 30,
+  },
+  text: {
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 
-class MainApp extends Component {
-  renderMaster = () => <UserList contacts={data.results} />;
+function HomeScene(props) {
+  function onPressButton(url) {
+    props.navigation.push('Webview', url);
+  }
 
-  renderDetail = () => {
-    if (Dimensions.isTablet()) {
-      return <UserDetail contact={data.results[0]} />;
-    }
-  };
+  return (
+    <View style={styles.content}>
+      <View>
+        {props.links.map((linksData, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => onPressButton(linksData.url)}
+            style={styles.btn}
+          >
+            <Text style={styles.text}>
+              {linksData.title}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+class MainApp extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      links: [
+        {
+          title: 'My Blog',
+          url: 'https://medium.com/@crysfel/latest',
+        },
+        { title: 'Google', url: 'https://www.google.com/' },
+        { title: 'Yahoo', url: 'https://www.yahoo.com/' },
+        { title: 'Facebook', url: 'https://facebook.com/' },
+      ],
+    };
+  }
 
   render() {
     return (
-      <View style={styles.content}>
-        {this.renderMaster()}
-        {this.renderDetail()}
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home">
+            {(props) => (
+              <HomeScene
+                {...props}
+                links={this.state.links}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Webview">
+            {(props) => (
+              <Browser
+                {...props}
+                links={this.state.links}
+              />
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
