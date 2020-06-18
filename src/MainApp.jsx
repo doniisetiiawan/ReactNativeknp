@@ -1,90 +1,92 @@
+/* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
 import {
-  View,
-  Animated,
-  Image,
-  Easing,
-  Dimensions,
+  Text,
+  TouchableOpacity,
   StyleSheet,
+  View,
 } from 'react-native';
-import cloudImage from './images/cloud.png';
-import cloudsImage from './images/cloudy.png';
-import planeImage from './images/transport.png';
-
-const { width, height } = Dimensions.get('window');
-const cloudWidth = 60;
+import Notification from './Notification/Notification';
 
 const styles = StyleSheet.create({
-  cloud1: {
-    position: 'absolute',
-    width: cloudWidth,
-    height: cloudWidth,
-    top: height / 3 - cloudWidth / 2,
+  toolbar: {
+    backgroundColor: '#8e44ad',
+    color: '#fff',
+    fontSize: 22,
+    padding: 20,
+    textAlign: 'center',
   },
-  cloud2: {
-    width: cloudWidth * 1.5,
-    height: cloudWidth * 1.5,
-    top: height / 2,
+  content: {
+    padding: 10,
+    overflow: 'hidden',
   },
-  plane: {
-    width: cloudWidth * 1.3,
-    height: cloudWidth * 1.3,
-    top: height / 2 - cloudWidth,
-    left: width / 2 - cloudWidth / 2,
+  btn: {
+    margin: 10,
+    backgroundColor: '#9b59b6',
+    borderRadius: 3,
+    padding: 10,
+  },
+  text: {
+    textAlign: 'center',
+    color: '#fff',
   },
 });
 
 class MainApp extends Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount = () => {
-    this.animatedValue = new Animated.Value(0);
-  };
+  constructor(props) {
+    super(props);
 
-  componentDidMount = () => {
-    this.startAnimation();
-  };
+    this.state = {
+      notify: false,
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+    };
+  }
 
-  startAnimation = () => {
-    this.animatedValue.setValue(1);
-    Animated.timing(this.animatedValue, {
-      toValue: 0,
-      duration: 6000,
-      easing: Easing.linear,
-    }).start(() => this.startAnimation());
+  onToggleNotification = () => {
+    this.setState({
+      notify: !this.state.notify,
+    });
   };
 
   render() {
-    const left1 = this.animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [-cloudWidth, width],
-    });
-
-    const left2 = this.animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [
-        -cloudWidth * 5,
-        width + cloudWidth * 5,
-      ],
-    });
+    const notify = this.state.notify ? (
+      <Notification
+        autoHide
+        message={this.state.message}
+        onClose={() => this.onToggleNotification()}
+      />
+    ) : null;
 
     return (
       <View>
-        <Animated.Image
-          style={[styles.cloud1, { left: left1 }]}
-          source={cloudImage}
-        />
-        <Animated.Image
-          style={[
-            styles.cloud1,
-            styles.cloud2,
-            { left: left2 },
-          ]}
-          source={cloudsImage}
-        />
-        <Image
-          style={[styles.cloud1, styles.plane]}
-          source={planeImage}
-        />
+        <Text style={styles.toolbar}>Main toolbar</Text>
+        <View style={styles.content}>
+          <Text>
+            Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation
+            ullamco laboris nisi ut aliquip ex ea commodo
+            consequat.
+          </Text>
+          <TouchableOpacity
+            onPress={() => this.onToggleNotification()}
+            style={styles.btn}
+          >
+            <Text style={styles.text}>
+              Show notification
+            </Text>
+          </TouchableOpacity>
+          <Text>
+            Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui
+            officia deserunt mollit anim id est laborum.
+          </Text>
+          {notify}
+        </View>
       </View>
     );
   }
