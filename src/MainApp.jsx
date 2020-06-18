@@ -1,101 +1,61 @@
-/* eslint-disable react/prop-types,react/no-array-index-key */
 import React, { Component } from 'react';
 import {
+  Alert,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  ScrollView,
   View,
+  Text,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Browser from './BrowserView/BrowserView';
-
-const Stack = createStackNavigator();
+import HTMLView from 'react-native-htmlview';
+import data from './data.json';
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+  },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btn: {
-    flex: 1,
-    margin: 10,
-    backgroundColor: '#c0392b',
-    borderRadius: 3,
     padding: 10,
-    paddingRight: 30,
-    paddingLeft: 30,
   },
-  text: {
+  title: {
+    backgroundColor: '#c0392b',
     color: '#fff',
+    padding: 20,
+    fontSize: 20,
     textAlign: 'center',
+  },
+  p: {
+    color: '#333',
+    fontSize: 16,
+  },
+  h3: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  a: {
+    color: '#c0392b',
+    fontWeight: 'normal',
   },
 });
 
-function HomeScene(props) {
-  function onPressButton(url) {
-    props.navigation.push('Webview', url);
-  }
-
-  return (
-    <View style={styles.content}>
-      <View>
-        {props.links.map((linksData, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => onPressButton(linksData.url)}
-            style={styles.btn}
-          >
-            <Text style={styles.text}>
-              {linksData.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </View>
-  );
-}
-
 class MainApp extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      links: [
-        {
-          title: 'My Blog',
-          url: 'https://medium.com/@crysfel/latest',
-        },
-        { title: 'Google', url: 'https://www.google.com/' },
-        { title: 'Yahoo', url: 'https://www.yahoo.com/' },
-        { title: 'Facebook', url: 'https://facebook.com/' },
-      ],
-    };
-  }
+  onLinkPress = (url) => {
+    Alert.alert('Link press', `URL: ${url}`);
+  };
 
   render() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Home">
-            {(props) => (
-              <HomeScene
-                {...props}
-                links={this.state.links}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="Webview">
-            {(props) => (
-              <Browser
-                {...props}
-                links={this.state.links}
-              />
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <View style={styles.main}>
+        <Text style={styles.title}>{data.title}</Text>
+        <ScrollView style={styles.content}>
+          <HTMLView
+            value={data.content}
+            stylesheet={styles}
+            onLinkPress={this.onLinkPress}
+          />
+        </ScrollView>
+      </View>
     );
   }
 }
