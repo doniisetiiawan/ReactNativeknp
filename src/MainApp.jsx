@@ -1,16 +1,13 @@
-/* eslint-disable react/no-access-state-in-setstate */
-import React, { Component } from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-} from 'react-native';
-import Notification from './Notification/Notification';
+import React from 'react';
+import { Text, StyleSheet, View } from 'react-native';
+import Panel from './Panel/Panel';
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+  },
   toolbar: {
-    backgroundColor: '#8e44ad',
+    backgroundColor: '#3498db',
     color: '#fff',
     fontSize: 22,
     padding: 20,
@@ -18,78 +15,70 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 10,
-    overflow: 'hidden',
+    backgroundColor: '#ecf0f1',
+    flex: 1,
   },
-  btn: {
-    margin: 10,
-    backgroundColor: '#9b59b6',
-    borderRadius: 3,
-    padding: 10,
-  },
-  text: {
-    textAlign: 'center',
-    color: '#fff',
+  panel: {
+    marginBottom: 10,
   },
 });
 
-class MainApp extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      notify: false,
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-    };
-  }
-
-  onToggleNotification = () => {
-    this.setState({
-      notify: !this.state.notify,
-    });
-  };
-
-  render() {
-    const notify = this.state.notify ? (
-      <Notification
-        autoHide
-        message={this.state.message}
-        onClose={() => this.onToggleNotification()}
-      />
-    ) : null;
-
-    return (
-      <View>
-        <Text style={styles.toolbar}>Main toolbar</Text>
-        <View style={styles.content}>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation
-            ullamco laboris nisi ut aliquip ex ea commodo
-            consequat.
-          </Text>
-          <TouchableOpacity
-            onPress={() => this.onToggleNotification()}
-            style={styles.btn}
-          >
-            <Text style={styles.text}>
-              Show notification
-            </Text>
-          </TouchableOpacity>
-          <Text>
-            Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </Text>
-          {notify}
-        </View>
-      </View>
-    );
-  }
-}
+const MainApp = () => (
+  <View style={styles.main}>
+    <Text style={styles.toolbar}>Animated containers</Text>
+    <View style={styles.content}>
+      <Panel
+        title="This is the first container"
+        style={styles.panel}
+      >
+        <Text>
+          Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat. Duis aute
+          irure dolor in reprehenderit in voluptate velit
+          esse cillum dolore eu fugiat nulla pariatur.
+          Excepteur sint occaecat cupidatat non proident,
+          sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </Text>
+      </Panel>
+      <Panel
+        title="Second panel in the view"
+        style={styles.panel}
+      >
+        <Text>
+          Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui
+          officia deserunt mollit anim id est laborum.
+        </Text>
+      </Panel>
+      <Panel
+        expanded
+        title="One more to test"
+        style={styles.panel}
+      >
+        <Text>
+          Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat.
+        </Text>
+        <Text>
+          Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat.
+        </Text>
+      </Panel>
+    </View>
+  </View>
+);
 
 export default MainApp;
