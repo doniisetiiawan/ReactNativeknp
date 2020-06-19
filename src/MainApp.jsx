@@ -1,50 +1,50 @@
+/* eslint-disable react/no-access-state-in-setstate */
 import React, { PureComponent } from 'react';
 import {
-  Alert,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
-const endpoint = 'https://my-bookmarks-api.herokuapp.com/api/bookmarks';
-
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#ecf0f1',
     flex: 1,
-    backgroundColor: '#fff',
   },
   toolbar: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#34495e',
     color: '#fff',
-    textAlign: 'center',
-    padding: 25,
     fontSize: 20,
+    padding: 25,
+    textAlign: 'center',
   },
   content: {
     flex: 1,
-    padding: 10,
   },
-  preview: {
+  msg: {
+    margin: 5,
+    padding: 10,
+    borderRadius: 10,
+  },
+  me: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#1abc9c',
+    marginRight: 100,
+  },
+  friend: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#fff',
+    marginLeft: 100,
+  },
+  inputContainer: {
     backgroundColor: '#bdc3c7',
-    flex: 1,
-    height: 500,
+    padding: 5,
   },
   input: {
-    backgroundColor: '#ecf0f1',
-    borderRadius: 3,
     height: 40,
-    padding: 5,
-    marginBottom: 10,
-    flex: 1,
-  },
-  btn: {
-    backgroundColor: '#3498db',
-    padding: 10,
-    borderRadius: 3,
-    marginBottom: 30,
+    backgroundColor: '#fff',
   },
 });
 
@@ -53,95 +53,85 @@ class MainApp extends PureComponent {
     super(props);
 
     this.state = {
-      result: '',
-      title: '',
-      url: '',
+      history: [],
     };
   }
 
-  componentDidMount = () => {
-    this.onLoad();
-  }
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount = () => {
+    this.ws = new WebSocket('ws://localhost:8080');
 
-  onLoad = async () => {
-    this.setState({ result: 'Loading, please wait...' });
-
-    const response = await fetch(endpoint, {
-      method: 'GET',
-    });
-
-    const result = await response.text();
-
-    this.setState({ result });
+    this.ws.onopen = this.onOpenConnection;
+    this.ws.onmessage = this.onMessageReceived;
+    this.ws.onerror = this.onError;
+    this.ws.onclose = this.onClose;
   };
 
-  onSave = async () => {
-    const { title, url } = this.state;
-
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      body: JSON.stringify({
-        category_id: 1,
-        title,
-        url,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (result.success === false) {
-      Alert.alert(
-        'Error',
-        'There was an error while saving the bookmark',
-      );
-    } else {
-      Alert.alert('Sucess', 'Bookmark successfully saved');
-      this.onLoad();
-    }
+  onOpenConnection = () => {
+    console.log('Open!');
   };
 
-  onTitleChange = (title) => this.setState({ title });
+  onMessageReceived = (event) => {
+    this.setState({
+      history: [
+        ...this.state.history,
+        { owner: false, msg: event.data },
+      ],
+    });
+  };
 
-  onUrlChange = (url) => this.setState({ url });
+  onError = (event) => {
+    console.log('onerror', event.message);
+  };
+
+  onClose = (event) => {
+    console.log('onclose', event.code, event.reason);
+  };
+
+  onSendMessage = () => {
+    const { text } = this.state;
+
+    this.setState({
+      text: '',
+      history: [
+        ...this.state.history,
+        { owner: true, msg: text },
+      ],
+    });
+    this.ws.send(text);
+  };
+
+  onChangeText = (text) => {
+    this.setState({ text });
+  };
+
+  renderMessage = (item, index) => {
+    const kind = item.owner ? styles.me : styles.friend;
+
+    return (
+      <View style={[styles.msg, kind]} key={index}>
+        <Text>{item.msg}</Text>
+      </View>
+    );
+  };
 
   render() {
-    const { result, title, url } = this.state;
+    const { history, text } = this.state;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.toolbar}>
-          Add a new bookmark
-        </Text>
+        <Text style={styles.toolbar}>Simple Chat</Text>
         <ScrollView style={styles.content}>
-          <TextInput
-            style={styles.input}
-            onChangeText={this.onTitleChange}
-            value={title}
-            placeholder="Title"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={this.onUrlChange}
-            value={url}
-            placeholder="URL (http://example.com)"
-          />
-          <TouchableOpacity
-            onPress={this.onSave}
-            style={styles.btn}
-          >
-            <Text>Save!</Text>
-          </TouchableOpacity>
-          <TextInput
-            style={[styles.input, styles.preview]}
-            value={result}
-            placeholder="Result..."
-            editable={false}
-            multiline
-          />
+          {history.map(this.renderMessage)}
         </ScrollView>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={this.onChangeText}
+            onSubmitEditing={this.onSendMessage}
+          />
+        </View>
       </View>
     );
   }
