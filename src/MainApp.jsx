@@ -1,103 +1,120 @@
-/* eslint-disable react/no-array-index-key */
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
-  ScrollView,
+  Alert,
+  AsyncStorage,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import PostContainer from './PostContainer/PostContainer';
-import PhotoViewer from './PhotoViewer/PhotoViewer';
 
-const path = 'https://s3.amazonaws.com/crysfel/public/book/03/08';
-const timeline = [
-  {
-    title: 'Enjoying the fireworks',
-    image: `${path}/01.jpg`,
-  },
-  {
-    title: 'Climbing the Mount Fuji',
-    image: `${path}/02.jpg`,
-  },
-  {
-    title: 'Check my last picture',
-    image: `${path}/03.jpg`,
-  },
-  {
-    title: 'Sakuras are beautiful!',
-    image: `${path}/04.jpg`,
-  },
-];
+const key = '@MyApp:key';
 
 const styles = StyleSheet.create({
-  main: {
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  preview: {
+    backgroundColor: '#bdc3c7',
+    width: 300,
+    height: 80,
+    padding: 10,
+    borderRadius: 5,
+    color: '#333',
+    marginBottom: 50,
+  },
+  input: {
     backgroundColor: '#ecf0f1',
-    flex: 1,
+    borderRadius: 3,
+    width: 300,
+    height: 40,
+    padding: 5,
   },
-  toolbar: {
-    backgroundColor: '#2c3e50',
-    color: '#fff',
-    fontSize: 22,
-    padding: 20,
-    textAlign: 'center',
-  },
-  content: {
-    flex: 1,
+  btn: {
+    backgroundColor: '#f39c12',
+    padding: 10,
+    borderRadius: 3,
+    marginTop: 10,
   },
 });
 
-class MainApp extends Component {
+class MainApp extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      selected: null,
-      position: null,
+      text: '',
+      storedValue: '',
     };
   }
 
-  showImage = (selected, position) => {
-    this.setState({
-      selected,
-      position,
-    });
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount = () => {
+    this.onLoad();
   };
 
-  closeViewer = () => {
-    this.setState({
-      selected: null,
-      position: null,
-    });
+  onChange = (text) => {
+    this.setState({ text });
   };
 
-  renderViewer = () => {
-    const { selected, position } = this.state;
+  onLoad = async () => {
+    try {
+      const storedValue = await AsyncStorage.getItem(key);
+      this.setState({ storedValue });
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'There was an error while loading the data',
+      );
+    }
+  };
 
-    if (selected) {
-      return (
-        <PhotoViewer
-          post={selected}
-          position={position}
-          onClose={this.closeViewer}
-        />
+  onSave = async () => {
+    const { text } = this.state;
+
+    try {
+      await AsyncStorage.setItem(key, text);
+      Alert.alert('Saved', 'Successfully saved on device');
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'There was an error while saving the data',
       );
     }
   };
 
   render() {
+    const { storedValue, text } = this.state;
+
     return (
-      <View style={styles.main}>
-        <Text style={styles.toolbar}>Timeline</Text>
-        <ScrollView style={styles.content}>
-          {timeline.map((post, index) => (
-            <PostContainer
-              key={index}
-              post={post}
-              onPress={this.showImage}
-            />
-          ))}
-        </ScrollView>
-        {this.renderViewer()}
+      <View style={styles.container}>
+        <Text style={styles.preview}>{storedValue}</Text>
+        <View>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => {
+              this.onChange(text);
+            }}
+            value={text}
+            placeholder="Type something here..."
+          />
+          <TouchableOpacity
+            onPress={this.onSave}
+            style={styles.btn}
+          >
+            <Text>Save locally</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.onLoad}
+            style={styles.btn}
+          >
+            <Text>Load data</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
