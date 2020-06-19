@@ -21,6 +21,7 @@
     "no-param-reassign": "off",
     "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
+    "no-shadow": "off",
     "react/jsx-one-expression-per-line": "off"
   }
 }
