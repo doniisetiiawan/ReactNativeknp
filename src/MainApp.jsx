@@ -1,50 +1,44 @@
-/* eslint-disable react/no-access-state-in-setstate */
 import React, { PureComponent } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ecf0f1',
     flex: 1,
+    backgroundColor: '#F5FCFF',
   },
   toolbar: {
-    backgroundColor: '#34495e',
-    color: '#fff',
+    backgroundColor: '#3498db',
+    padding: 15,
     fontSize: 20,
-    padding: 25,
+    color: '#fff',
     textAlign: 'center',
   },
-  content: {
-    flex: 1,
+  text: {
+    padding: 10,
+  },
+  mask: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
   msg: {
-    margin: 5,
-    padding: 10,
+    backgroundColor: '#ecf0f1',
     borderRadius: 10,
+    height: 200,
+    justifyContent: 'center',
+    padding: 10,
+    width: 300,
   },
-  me: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#1abc9c',
-    marginRight: 100,
-  },
-  friend: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#fff',
-    marginLeft: 100,
-  },
-  inputContainer: {
-    backgroundColor: '#bdc3c7',
-    padding: 5,
-  },
-  input: {
-    height: 40,
-    backgroundColor: '#fff',
+  alert: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 5,
   },
 });
 
@@ -53,85 +47,75 @@ class MainApp extends PureComponent {
     super(props);
 
     this.state = {
-      history: [],
+      // eslint-disable-next-line react/no-unused-state
+      online: null,
+      offline: null,
     };
   }
 
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount = () => {
-    this.ws = new WebSocket('ws://localhost:8080');
-
-    this.ws.onopen = this.onOpenConnection;
-    this.ws.onmessage = this.onMessageReceived;
-    this.ws.onerror = this.onError;
-    this.ws.onclose = this.onClose;
-  };
-
-  onOpenConnection = () => {
-    console.log('Open!');
-  };
-
-  onMessageReceived = (event) => {
-    this.setState({
-      history: [
-        ...this.state.history,
-        { owner: false, msg: event.data },
-      ],
+    NetInfo.fetch().then((reach) => {
+      this.onConnectivityChange(reach);
     });
   };
 
-  onError = (event) => {
-    console.log('onerror', event.message);
-  };
-
-  onClose = (event) => {
-    console.log('onclose', event.code, event.reason);
-  };
-
-  onSendMessage = () => {
-    const { text } = this.state;
-
+  onConnectivityChange = (reach) => {
     this.setState({
-      text: '',
-      history: [
-        ...this.state.history,
-        { owner: true, msg: text },
-      ],
+      // eslint-disable-next-line react/no-unused-state
+      online: reach !== 'none',
+      offline: reach === 'none',
     });
-    this.ws.send(text);
   };
 
-  onChangeText = (text) => {
-    this.setState({ text });
-  };
-
-  renderMessage = (item, index) => {
-    const kind = item.owner ? styles.me : styles.friend;
-
-    return (
-      <View style={[styles.msg, kind]} key={index}>
-        <Text>{item.msg}</Text>
-      </View>
-    );
+  renderMask = () => {
+    if (this.state.offline) {
+      return (
+        <View style={styles.mask}>
+          <View style={styles.msg}>
+            <Text style={styles.alert}>
+              Seems like you do not have network connection
+              anymore.
+            </Text>
+            <Text style={styles.alert}>
+              You can still continue using the app, with
+              limited content.
+            </Text>
+          </View>
+        </View>
+      );
+    }
   };
 
   render() {
-    const { history, text } = this.state;
-
     return (
       <View style={styles.container}>
-        <Text style={styles.toolbar}>Simple Chat</Text>
-        <ScrollView style={styles.content}>
-          {history.map(this.renderMessage)}
-        </ScrollView>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={text}
-            onChangeText={this.onChangeText}
-            onSubmitEditing={this.onSendMessage}
-          />
-        </View>
+        <Text style={styles.toolbar}>My Awesome App</Text>
+        <Text style={styles.text}>
+          Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat. Duis aute
+          irure dolor in reprehenderit in voluptate velit
+          esse cillum dolore eu fugiat nulla pariatur.
+          Excepteur sint occaecat cupidatat non proident,
+          sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </Text>
+        <Text style={styles.text}>
+          Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat. Duis aute
+          irure dolor in reprehenderit in voluptate velit
+          esse cillum dolore eu fugiat nulla pariatur.
+          Excepteur sint occaecat cupidatat non proident,
+          sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </Text>
+        {this.renderMask()}
       </View>
     );
   }
