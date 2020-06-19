@@ -1,15 +1,11 @@
 import React, { PureComponent } from 'react';
 import {
-  Alert,
-  AsyncStorage,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-
-const key = '@MyApp:key';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,21 +17,14 @@ const styles = StyleSheet.create({
   preview: {
     backgroundColor: '#bdc3c7',
     width: 300,
-    height: 80,
+    height: 400,
     padding: 10,
     borderRadius: 5,
     color: '#333',
     marginBottom: 50,
   },
-  input: {
-    backgroundColor: '#ecf0f1',
-    borderRadius: 3,
-    width: 300,
-    height: 40,
-    padding: 5,
-  },
   btn: {
-    backgroundColor: '#f39c12',
+    backgroundColor: '#3498db',
     padding: 10,
     borderRadius: 3,
     marginTop: 10,
@@ -47,69 +36,40 @@ class MainApp extends PureComponent {
     super(props);
 
     this.state = {
-      text: '',
-      storedValue: '',
+      result: '',
     };
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount = () => {
-    this.onLoad();
-  };
-
-  onChange = (text) => {
-    this.setState({ text });
-  };
-
   onLoad = async () => {
-    try {
-      const storedValue = await AsyncStorage.getItem(key);
-      this.setState({ storedValue });
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'There was an error while loading the data',
-      );
-    }
-  };
+    this.setState({ result: 'Loading, please wait...' });
 
-  onSave = async () => {
-    const { text } = this.state;
+    const response = await fetch(
+      'https://my-bookmarks-api.herokuapp.com/api/bookmarks',
+      {
+        method: 'GET',
+      },
+    );
 
-    try {
-      await AsyncStorage.setItem(key, text);
-      Alert.alert('Saved', 'Successfully saved on device');
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'There was an error while saving the data',
-      );
-    }
+    const result = await response.text();
+
+    this.setState({ result });
   };
 
   render() {
-    const { storedValue, text } = this.state;
+    const { result } = this.state;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.preview}>{storedValue}</Text>
         <View>
           <TextInput
-            style={styles.input}
-            onChangeText={(text) => {
-              this.onChange(text);
-            }}
-            value={text}
-            placeholder="Type something here..."
+            style={styles.preview}
+            value={result}
+            placeholder="Result..."
+            editable={false}
+            multiline
           />
           <TouchableOpacity
-            onPress={this.onSave}
-            style={styles.btn}
-          >
-            <Text>Save locally</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.onLoad}
+            onPress={() => this.onLoad()}
             style={styles.btn}
           >
             <Text>Load data</Text>
