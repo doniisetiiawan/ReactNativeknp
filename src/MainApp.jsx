@@ -1,8 +1,8 @@
 import React from 'react';
-import CopyPaste from './CopyPaste';
+import PushNotifications from './PushNotifications';
 
 function MainApp() {
-  return <CopyPaste />;
+  return <PushNotifications />;
 }
 
 export default MainApp;

@@ -3,4 +3,4 @@ require('@babel/register')({
   presets: ['@babel/preset-env'],
 });
 
-module.exports = require('./server');
+module.exports = require('./android-push');
