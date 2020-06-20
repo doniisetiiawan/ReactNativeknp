@@ -1,81 +1,8 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  AppState,
-} from 'react-native';
+import React from 'react';
+import CopyPaste from './CopyPaste';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-class MainApp extends Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount = () => {
-    AppState.addEventListener(
-      'change',
-      this.onAppStateChange,
-    );
-    this.currentAppState = 'active';
-    this.setState({
-      appStatus: 'Welcome!',
-    });
-  };
-
-  componentWillUnmount = () => {
-    AppState.removeEventListener(
-      'change',
-      this.onAppStateChange,
-    );
-  };
-
-  onAppStateChange = (appState) => {
-    let appStatus;
-
-    this.previousAppState = this.currentAppState;
-    this.currentAppState = appState;
-
-    // eslint-disable-next-line default-case
-    switch (appState) {
-      case 'inactive':
-        appStatus = "I'm Hiding!";
-        break;
-      case 'background':
-        appStatus = "I'm Hidden";
-        break;
-      case 'active':
-        appStatus = 'Welcome Back!';
-        break;
-    }
-
-    this.setState({ appStatus });
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          {this.state.appStatus}
-        </Text>
-      </View>
-    );
-  }
+function MainApp() {
+  return <CopyPaste />;
 }
 
 export default MainApp;
